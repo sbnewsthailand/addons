@@ -5,7 +5,16 @@
         <?php
         foreach ($sender->data('Answers') as $Row) {
             $sender->EventArguments['Comment'] = $Row;
+
+            ob_start();
             writeComment($Row, $sender, Gdn::session(), 0);
+            $commentMarkup = ob_get_clean();
+
+            if (c('QnA.AcceptedAnswers.Filter', true) == false) {
+                $commentMarkup = preg_replace('/id="Comment_\d+"/', '', $commentMarkup);
+            }
+
+            echo $commentMarkup;
         }
         ?>
     </ul>
